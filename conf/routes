@@ -3,13 +3,16 @@
 # ~~~~
 
 # Home page
-GET         /                    controllers.Application.index
+GET         /                             controllers.Application.index
 
-GET         /document/:id        controllers.Application.download(id: Long)
+GET         /:id                          controllers.Application.category(id: Long)
 
-POST        /insert              controllers.Application.insert
+GET         /document/:id/download        controllers.DocumentsController.download(id: Long)
 
-POST        /upload              controllers.Application.upload
+POST        /insert                       controllers.Application.insert
+
+POST        /:id/upload                   controllers.DocumentsController.upload(id: Long)
+GET         /:id/upload                   controllers.DocumentsController.showUpload(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file        controllers.Assets.at(path="/public", file)
+GET         /assets/*file                 controllers.Assets.at(path="/public", file)

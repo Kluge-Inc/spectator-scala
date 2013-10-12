@@ -18,32 +18,44 @@ case class Page[A](items: Seq[A], page: Int, offset: Long, total: Long) {
   *  Used to create the DAOs: Companies and Computers
   */
 private[models] trait DAO {
-  val Categories= new Categories
+  //val Categories= new Categories
 //  val Computers = new
 }
 
 case class Category(id: Option[Long], name: String)
+case class NewCategory(name: String)
 
-case class Document(id: Option[Long] = None, name: String, file: Array[Byte])
+case class Document(id: Option[Long], name: String, file: Array[Byte], categoryId: Long)
+case class NewDocument(name: String, file: Array[Byte], categoryId: Long)
 
-class Categories extends Table[Category]("CATEGORY") {
+
+object Categories extends Table[Category]("CATEGORY") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name", O.NotNull)
-  def * = id.? ~ name <>(Category.apply _, Category.unapply _)
-  def autoInc = * returning id
+  def * = id.? ~ name <> (Category, Category.unapply _)
+  def autoInc = name returning id
 }
 
-class Documents extends Table[Document]("DOCUMENT") {
+object Documents extends Table[Document]("DOCUMENT") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name", O.NotNull)
   def file = column[Array[Byte]]("file", O.NotNull)
-  //def categoryId = column[Long]("category_id", O.NotNull)
-  def * = id.? ~ name ~ file <>(Document.apply _, Document.unapply _)
-  def autoInc = * returning id
-}
 
-object Categories extends DAO {
-  def insert(category: Category)(implicit s:Session){
-    Categories.autoInc.insert(category)
+  def categoryId = column[Long]("category_id", O.NotNull)
+  def category = foreignKey("CATEGORY_FK", categoryId, Categories)(_.id)
+
+  def * = id.? ~ name ~ file ~ categoryId <>(Document.apply _, Document.unapply _)
+  def autoInc = name ~ file ~ categoryId returning id
+  def getByCategory(id: Long)(implicit s:Session) = {
+    val query = for {
+      d <- Documents if d.categoryId === id
+    } yield d
+    query.list
   }
 }
+
+//object Categories extends DAO {
+//  def insert(category: Category)(implicit s:Session){
+//    Categories.autoInc.insert(category)
+//  }
+//}

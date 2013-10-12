@@ -1,0 +1,24 @@
+@(catid: Long)
+@import helper.twitterBootstrap._
+
+@main("Добавить документ") {
+    <div class="jumbotron">
+        <h1>Добавление документа</h1>
+
+
+        <form action="@routes.DocumentsController.upload(catid)" role="form" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Имя</label>
+                <input type="text" id="name" name="name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label  for="doc">Файл</label>
+                <input type="file" id="doc" name="doc">
+            </div>
+
+            <button type="submit" class="btn btn-default">Загрузить</button>
+        </form>
+    </div>
+} {
+    <div></div>
+}
