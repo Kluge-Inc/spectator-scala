@@ -31,7 +31,7 @@ object DocumentsController extends Controller {
 
   def showUpload(id: Long) = DBAction {
     implicit rs =>
-      Ok(views.html.addDocument(id))
+      Ok(views.html.addDocument(Categories.getForm(id)))
   }
 
   def upload(categoryId: Long) = DBAction(parse.multipartFormData) {
@@ -45,7 +45,6 @@ object DocumentsController extends Controller {
       }.getOrElse {
         BadRequest("Nope!")
       }
-      val document = new Document(None, name, file, categoryId)
       Documents.autoInc.insert(name, file, categoryId)
       Redirect(routes.Application.index)
     }

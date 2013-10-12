@@ -22,18 +22,28 @@ private[models] trait DAO {
 //  val Computers = new
 }
 
-case class Category(id: Option[Long], name: String)
+case class Category(id: Long, name: String)
 case class NewCategory(name: String)
+case class CategoryForm(active: Category, categories: List[Category])
 
-case class Document(id: Option[Long], name: String, file: Array[Byte], categoryId: Long)
+case class Document(id: Long, name: String, file: Array[Byte], categoryId: Long)
 case class NewDocument(name: String, file: Array[Byte], categoryId: Long)
 
 
 object Categories extends Table[Category]("CATEGORY") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name", O.NotNull)
-  def * = id.? ~ name <> (Category, Category.unapply _)
+  def * = id ~ name <> (Category, Category.unapply _)
   def autoInc = name returning id
+
+  def list(implicit s:Session) = Query(Categories).list
+  def findById(id: Long)(implicit s:Session) = {
+    val query = for {
+      c <- Categories if c.id === id
+    } yield c
+    query.firstOption.get
+  }
+  def getForm(id: Long)(implicit s:Session) = new  CategoryForm(findById(id), list)
 }
 
 object Documents extends Table[Document]("DOCUMENT") {
@@ -44,8 +54,9 @@ object Documents extends Table[Document]("DOCUMENT") {
   def categoryId = column[Long]("category_id", O.NotNull)
   def category = foreignKey("CATEGORY_FK", categoryId, Categories)(_.id)
 
-  def * = id.? ~ name ~ file ~ categoryId <>(Document.apply _, Document.unapply _)
+  def * = id ~ name ~ file ~ categoryId <>(Document.apply _, Document.unapply _)
   def autoInc = name ~ file ~ categoryId returning id
+
   def getByCategory(id: Long)(implicit s:Session) = {
     val query = for {
       d <- Documents if d.categoryId === id
@@ -53,9 +64,3 @@ object Documents extends Table[Document]("DOCUMENT") {
     query.list
   }
 }
-
-//object Categories extends DAO {
-//  def insert(category: Category)(implicit s:Session){
-//    Categories.autoInc.insert(category)
-//  }
-//}

@@ -1,4 +1,4 @@
-@(title: String)(head: Html)(content: Html)
+@(categories: CategoryForm, title: String)(head: Html)(content: Html)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,6 +27,11 @@
                     <li><a href="#">Пользователи</a></li>
                 </ul>
                 <h3 class="text-muted">Список документов</h3>
+                <ul class="nav nav-pills pull-left">
+                    @for(category <- categories.categories) {
+                        <li @if(category.id == categories.active.id) {class="active"}><a href="@routes.Application.category(category.id)">@category.name</a></li>
+                    }
+                </ul>
             </div>
 
             @head

@@ -16,7 +16,7 @@ object Application extends Controller {
 
   def category(id: Long) = DBAction {
     implicit rs =>
-      Ok(views.html.index(Documents.getByCategory(id)))
+      Ok(views.html.index(Categories.getForm(id), Documents.getByCategory(id)))
   }
 
   val categoryForm = Form(

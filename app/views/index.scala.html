@@ -1,11 +1,11 @@
-@(documents: List[Document])
+@(categories: CategoryForm, documents: List[Document])
 
-@main("Список документов") {
+@main(categories, "Список документов") {
     <div class="jumbotron">
         <h1>Список документов</h1>
 
 
-        <p><a class="btn btn-lg btn-success" href="@routes.DocumentsController.showUpload(1)">Загрузить</a></p>
+        <p><a class="btn btn-lg btn-success" href="@routes.DocumentsController.showUpload(categories.active.id)">Загрузить</a></p>
     </div>
 } {
     <table class="table">
@@ -27,7 +27,7 @@
                 <td>12.1</td>
                 <td>2013-10-11</td>
                 <td>ekabin</td>
-                <td><a href="@routes.DocumentsController.download(document.id.get)">Download</a></td>
+                <td><a href="@routes.DocumentsController.download(document.id)">Download</a></td>
             </tr>
         }
         </tbody>

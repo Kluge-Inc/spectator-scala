@@ -1,12 +1,10 @@
-@(catid: Long)
-@import helper.twitterBootstrap._
+@(categories: CategoryForm)
 
-@main("Добавить документ") {
+@main(categories, "Добавить документ") {
     <div class="jumbotron">
         <h1>Добавление документа</h1>
 
-
-        <form action="@routes.DocumentsController.upload(catid)" role="form" method="POST" enctype="multipart/form-data">
+        <form action="@routes.DocumentsController.upload(categories.active.id)" role="form" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Имя</label>
                 <input type="text" id="name" name="name" class="form-control">
