@@ -2,11 +2,12 @@ package controllers
 
 import models._
 import play.api.db.slick._
-import play.api.db.slick.Config.driver.simple._
 import play.api.mvc._
 import play.api.Play.current
 import play.api.libs.iteratee.Enumerator
 import com.google.common.io.Files
+import scala.slick.lifted.Query
+import java.sql.Date
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,16 +18,12 @@ import com.google.common.io.Files
 
 object DocumentsController extends Controller {
   def download(id: Long) = DBAction {
-    implicit rs => {
-      val query = for {
-        d <- Documents if d.id === id
-      } yield d
-      val document = query.firstOption.get
+    implicit rs =>
+      val document = Documents.findById(id)
       SimpleResult(
-        header = ResponseHeader(200, Map("Content-Disposition" -> ("attachment; filename=" + document.name + ".doc"))),
-        body = Enumerator(document.file)
+        header = ResponseHeader(200, Map("Content-Disposition" -> ("attachment; filename=" + document._1.name + ".doc"))),
+        body = Enumerator(document._2.file)
       )
-    }
   }
 
   def showUpload(id: Long) = DBAction {
@@ -45,7 +42,7 @@ object DocumentsController extends Controller {
       }.getOrElse {
         BadRequest("Nope!")
       }
-      Documents.autoInc.insert(name, file, categoryId)
+      Documents.insertWithVersion(new NewDocument(name,categoryId), new NewVersion(null, "1.0", file))
       Redirect(routes.Application.index)
     }
   }

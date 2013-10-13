@@ -7,7 +7,7 @@ package models
  * Time: 2:08 PM
  */
 
-import java.util.Date
+import java.sql.Date
 
 import play.api.Play.current
 
@@ -17,7 +17,7 @@ import slick.lifted.{Join, MappedTypeMapper}
 
 
 case class Version(id: Long, documentId: Long, date: Date, version: String, file: Array[Byte])
-case class NewVersion(documentId: Long, date: Date, version: String, file: Array[Byte])
+case class NewVersion(date: Date, version: String, file: Array[Byte])
 
 
 
