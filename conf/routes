@@ -14,6 +14,8 @@ GET         /document/:id/download        controllers.DocumentsController.downlo
 GET         /document/:id/upload          controllers.VersionController.showUpdate(id: Long)
 POST        /document/:id/upload          controllers.VersionController.update(id: Long)
 
+GET         /version/:id/download         controllers.VersionController.download(id: Long)
+
 POST        /:id/upload                   controllers.DocumentsController.uploadToCategory(id: Long)
 GET         /:id/upload                   controllers.DocumentsController.showUploadToCategory(id: Long)
 

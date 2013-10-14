@@ -14,6 +14,7 @@ import play.api.Play.current
 import play.api.db.slick.Config.driver.simple._
 
 import slick.lifted.{Join, MappedTypeMapper}
+import models.Documents.ActualDocument
 
 
 case class Version(id: Long, documentId: Long, date: Date, version: String, file: Array[Byte])
@@ -35,6 +36,15 @@ object Versions extends Table[Version]("VERSION") {
   def autoInc = id ~ documentId ~ date ~ version ~ file returning id
 
   def byDocument = createFinderBy(_.documentId)
+  def byId = createFinderBy(_.id)
+
+  def byIdWithDocument(id:Long)(implicit s:Session) : ActualDocument = {
+    val query =  for {
+      (d, v) <- Documents innerJoin Versions on (_.id === _.documentId) if v.id === id
+    } yield (d, v)
+
+    query.firstOption.get
+  }
 
   def getByDocument(id: Long)(implicit s:Session) = byDocument(id).list()
 }

@@ -6,6 +6,7 @@ import play.api.mvc._
 import play.api.Play.current
 import com.google.common.io.Files
 import java.sql.Date
+import play.api.libs.iteratee.Enumerator
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,5 +40,14 @@ object VersionController extends Controller {
 
       Redirect(routes.DocumentsController.show(documentId))
     }
+  }
+
+  def download(id: Long) = DBAction {
+    implicit rs =>
+      val document = Versions.byIdWithDocument(id)
+      SimpleResult(
+        header = ResponseHeader(200, Map("Content-Disposition" -> ("attachment; filename=" + document._1.name + "-" + document._2.version + ".doc"))),
+        body = Enumerator(document._2.file)
+      )
   }
 }
