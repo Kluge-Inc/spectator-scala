@@ -6,11 +6,11 @@ import play.api.mvc._
 import play.api.Play.current
 import com.google.common.io.Files
 import java.sql.Date
-import play.api.libs.iteratee.Enumerator
 import difflib.DiffUtils
 import scala.io.Source
 import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConversions._
+import play.api.libs.iteratee.Enumerator
 
 
 /**
@@ -48,12 +48,14 @@ object VersionController extends Controller {
   }
 
   def download(id: Long) = DBAction {
-    implicit rs =>
+    implicit rs => {
       val document = Versions.byIdWithDocument(id)
+
       SimpleResult(
-        header = ResponseHeader(200, Map("Content-Disposition" -> ("attachment; filename=" + document._1.name + "-" + document._2.version + ".doc"))),
+        header = ResponseHeader(200, Map("Content-Disposition" -> ("attachment; filename=" + java.net.URLEncoder.encode(document._1.name, "UTF-8") + "-" + document._2.version + ".doc"))),
         body = Enumerator(document._2.file)
       )
+    }
   }
 
   def diff(id1: Long, id2: Long) = DBAction {
@@ -65,7 +67,7 @@ object VersionController extends Controller {
       val firstLines = Source.fromBytes(firstVersion.file)(scala.io.Codec.UTF8).getLines().toList
       val secondLines = Source.fromBytes(secondVersion.file)(scala.io.Codec.UTF8).getLines().toList
 
-      val diffs = DiffUtils.diff(ListBuffer( firstLines: _* ), ListBuffer( secondLines: _* ))
+      val diffs = DiffUtils.diff(ListBuffer(firstLines: _*), ListBuffer(secondLines: _*))
       Ok(diffs.getDeltas.get(0).toString)
     }
   }

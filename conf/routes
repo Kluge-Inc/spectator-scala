@@ -3,22 +3,21 @@
 # ~~~~
 
 # Home page
-GET         /                             controllers.Application.index
+GET         /                              controllers.Application.index
 
-GET         /category/add                 controllers.CategoryController.addForm
-GET         /category/:id                 controllers.CategoryController.category(id: Long)
-POST        /category                     controllers.CategoryController.insert
+GET         /category/add                  controllers.CategoryController.addForm
+GET         /category/:id                  controllers.CategoryController.category(id: Long)
+POST        /category                      controllers.CategoryController.insert
 
-GET         /document/:id                 controllers.DocumentsController.show(id: Long)
-GET         /document/:id/download        controllers.DocumentsController.download(id: Long)
-GET         /document/:id/upload          controllers.VersionController.showUpdate(id: Long)
-POST        /document/:id/upload          controllers.VersionController.update(id: Long)
+GET         /document/:id                  controllers.DocumentsController.show(id: Long)
+GET         /document/:id/upload           controllers.VersionController.showUpdate(id: Long)
+POST        /document/:id/upload           controllers.VersionController.update(id: Long)
 
-GET         /version/:id/download         controllers.VersionController.download(id: Long)
-GET /version/diff/:id1/:id2                 controllers.VersionController.diff(id1: Long, id2: Long)
+GET         /version/:id/download          controllers.VersionController.download(id: Long)
+GET         /version/diff/:id1/:id2        controllers.VersionController.diff(id1: Long, id2: Long)
 
-POST        /:id/upload                   controllers.DocumentsController.uploadToCategory(id: Long)
-GET         /:id/upload                   controllers.DocumentsController.showUploadToCategory(id: Long)
+POST        /:id/upload                    controllers.DocumentsController.uploadToCategory(id: Long)
+GET         /:id/upload                    controllers.DocumentsController.showUploadToCategory(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                 controllers.Assets.at(path="/public", file)
+GET         /assets/*file                  controllers.Assets.at(path="/public", file)

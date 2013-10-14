@@ -2,9 +2,8 @@ package controllers
 
 import models._
 import play.api.db.slick._
-import play.api.mvc._
+import play.api.mvc.{Session => _,_}
 import play.api.Play.current
-import play.api.libs.iteratee.Enumerator
 import com.google.common.io.Files
 
 /**
@@ -15,14 +14,6 @@ import com.google.common.io.Files
  */
 
 object DocumentsController extends Controller {
-  def download(id: Long) = DBAction {
-    implicit rs =>
-      val document = Documents.findById(id)
-      SimpleResult(
-        header = ResponseHeader(200, Map("Content-Disposition" -> ("attachment; filename=" + document._1.name + ".doc"))),
-        body = Enumerator(document._2.file)
-      )
-  }
 
   def showUploadToCategory(id: Long) = DBAction {
     implicit rs =>
