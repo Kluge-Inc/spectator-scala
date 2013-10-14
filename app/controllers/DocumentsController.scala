@@ -6,7 +6,6 @@ import play.api.mvc._
 import play.api.Play.current
 import play.api.libs.iteratee.Enumerator
 import com.google.common.io.Files
-import java.sql.Date
 
 /**
  * Created with IntelliJ IDEA.

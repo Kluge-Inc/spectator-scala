@@ -4,7 +4,6 @@ import models._
 import play.api.db.slick._
 import play.api.mvc._
 import play.api.Play.current
-import play.api.libs.iteratee.Enumerator
 import com.google.common.io.Files
 import java.sql.Date
 
@@ -14,7 +13,7 @@ import java.sql.Date
  * Date: 14.10.13
  * Time: 16:59
  */
-object VersionController extends Controller{
+object VersionController extends Controller {
   def showUpdate(id: Long) = DBAction {
     implicit rs => {
       val document = Documents.findById(id)

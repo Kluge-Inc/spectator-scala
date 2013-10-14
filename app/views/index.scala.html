@@ -24,7 +24,8 @@
                 <td>@document._2.version</td>
                 <td>@document._2.date</td>
                 <td>ekabin</td>
-                <td><a href="@routes.DocumentsController.download(document._1.id)">Download</a></td>
+                <td><a href="@routes.DocumentsController.download(document._1.id)">Download</a>
+                    <a href="@routes.VersionController.update(document._1.id)">Update</a></td>
             </tr>
         }
         </tbody>

@@ -3,7 +3,7 @@
 @defining(data._1){ document=>
 @main(categories, "Просмотр документа") {
     <div class="jumbotron">
-        <p><a class="btn btn-lg btn-success" href="@routes.DocumentsController.showUpdate(categories.active.get.id)">Загрузить версию</a></p>
+        <p><a class="btn btn-lg btn-success" href="@routes.VersionController.showUpdate(categories.active.get.id)">Загрузить версию</a></p>
     </div>
 } {
     <dl class="dl-horizontal">
