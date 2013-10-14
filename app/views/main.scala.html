@@ -26,8 +26,8 @@
                     <li class="active"><a href="@routes.Application.index">Документы</a></li>
                     <li><a href="#">Пользователи</a></li>
                 </ul>
-                <h3 class="text-muted">Список документов</h3>
-                <ul class="nav nav-pills pull-left">
+                <h3 class="text-muted pull-left">Категории</h3>
+                <ul class="nav nav-pills pull-left" style="margin-left: 10px;">
                     @for(category <- categories.categories) {
                         <li @if(category.id == categories.active.getOrElse(new Category(0,"")).id) {class="active"}><a href="@routes.CategoryController.category(category.id)">@category.name</a></li>
                     }
