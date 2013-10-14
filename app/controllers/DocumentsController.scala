@@ -43,7 +43,7 @@ object DocumentsController extends Controller {
         BadRequest("Nope!")
       }
       Documents.insertWithVersion(new NewDocument(name,categoryId), new NewVersion(null, "1.0", file))
-      Redirect(routes.Application.index)
+      Redirect(routes.CategoryController.category(categoryId))
     }
   }
 }

@@ -5,11 +5,13 @@
 # Home page
 GET         /                             controllers.Application.index
 
-GET         /:id                          controllers.Application.category(id: Long)
+GET         /category/add                 controllers.CategoryController.addForm
+GET         /category/:id                 controllers.CategoryController.category(id: Long)
+POST        /category                     controllers.CategoryController.insert
+
 
 GET         /document/:id/download        controllers.DocumentsController.download(id: Long)
 
-POST        /insert                       controllers.Application.insert
 
 POST        /:id/upload                   controllers.DocumentsController.upload(id: Long)
 GET         /:id/upload                   controllers.DocumentsController.showUpload(id: Long)

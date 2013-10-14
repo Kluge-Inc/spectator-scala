@@ -17,7 +17,7 @@ import slick.lifted.{Join, MappedTypeMapper}
 
 case class Category(id: Long, name: String)
 case class NewCategory(name: String)
-case class CategoryForm(active: Category, categories: List[Category])
+case class CategoryForm(active: Option[Category], categories: List[Category])
 
 object Categories extends Table[Category]("CATEGORY") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
@@ -30,7 +30,8 @@ object Categories extends Table[Category]("CATEGORY") {
     val query = for {
       c <- Categories if c.id === id
     } yield c
-    query.firstOption.get
+    query.firstOption
   }
   def getForm(id: Long)(implicit s:Session) = new  CategoryForm(findById(id), list)
+  def getForm(implicit s:Session) = new CategoryForm(None, list)
 }

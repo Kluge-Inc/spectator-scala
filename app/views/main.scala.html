@@ -29,8 +29,9 @@
                 <h3 class="text-muted">Список документов</h3>
                 <ul class="nav nav-pills pull-left">
                     @for(category <- categories.categories) {
-                        <li @if(category.id == categories.active.id) {class="active"}><a href="@routes.Application.category(category.id)">@category.name</a></li>
+                        <li @if(category.id == categories.active.getOrElse(new Category(0,"")).id) {class="active"}><a href="@routes.CategoryController.category(category.id)">@category.name</a></li>
                     }
+                    <li><a href="@routes.CategoryController.addForm">+</a></li>
                 </ul>
             </div>
 
