@@ -10,11 +10,14 @@ GET         /category/:id                 controllers.CategoryController.categor
 POST        /category                     controllers.CategoryController.insert
 
 
+GET         /document/:id                 controllers.DocumentsController.show(id: Long)
 GET         /document/:id/download        controllers.DocumentsController.download(id: Long)
+GET         /document/:id/upload          controllers.DocumentsController.showUpdate(id: Long)
+POST        /document/:id/upload          controllers.DocumentsController.update(id: Long)
 
 
-POST        /:id/upload                   controllers.DocumentsController.upload(id: Long)
-GET         /:id/upload                   controllers.DocumentsController.showUpload(id: Long)
+POST        /:id/upload                   controllers.DocumentsController.uploadToCategory(id: Long)
+GET         /:id/upload                   controllers.DocumentsController.showUploadToCategory(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                 controllers.Assets.at(path="/public", file)

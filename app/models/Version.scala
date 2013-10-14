@@ -33,4 +33,8 @@ object Versions extends Table[Version]("VERSION") {
 
   def * = id ~ documentId ~ date ~ version ~ file <> (Version.apply _, Version.unapply _)
   def autoInc = id ~ documentId ~ date ~ version ~ file returning id
+
+  def byDocument = createFinderBy(_.documentId)
+
+  def getByDocument(id: Long)(implicit s:Session) = byDocument(id).list()
 }

@@ -6,7 +6,6 @@ import play.api.mvc._
 import play.api.Play.current
 import play.api.libs.iteratee.Enumerator
 import com.google.common.io.Files
-import scala.slick.lifted.Query
 import java.sql.Date
 
 /**
@@ -26,12 +25,46 @@ object DocumentsController extends Controller {
       )
   }
 
-  def showUpload(id: Long) = DBAction {
+  def showUploadToCategory(id: Long) = DBAction {
     implicit rs =>
-      Ok(views.html.addDocument(Categories.getForm(id)))
+      Ok(views.html.addDocument(Categories.getForm(id), None))
   }
 
-  def upload(categoryId: Long) = DBAction(parse.multipartFormData) {
+  def showUpdate(id: Long) = DBAction {
+    implicit rs => {
+      val document = Documents.findById(id)
+      Ok(views.html.addVersion(Categories.getForm(document._1.categoryId), document))
+    }
+  }
+
+
+  def show(id: Long) = DBAction {
+    implicit rs => {
+      val document = Documents.findByIdWithVersion(id)
+      Ok(views.html.document(Categories.getForm(document._1._1.categoryId), document))
+    }
+  }
+
+  def update(documentId: Long) = DBAction(parse.multipartFormData) {
+    implicit request => {
+      val document = Documents.findById(documentId)
+      val version = request.body.asFormUrlEncoded("version").head
+      var file: Array[Byte] = Array.emptyByteArray
+      request.body.file("doc").map {
+        doc =>
+          file = Files.toByteArray(doc.ref.file)
+          doc.ref.file.delete()
+      }.getOrElse {
+        BadRequest("Nope!")
+      }
+
+      Documents.insertVersion(document._1, new NewVersion(new Date(1900, 5, 20), version, file))
+
+      Redirect(routes.DocumentsController.show(documentId))
+    }
+  }
+
+  def uploadToCategory(categoryId: Long) = DBAction(parse.multipartFormData) {
     implicit request => {
       val name = request.body.asFormUrlEncoded("name").head
       var file: Array[Byte] = Array.emptyByteArray
@@ -42,7 +75,7 @@ object DocumentsController extends Controller {
       }.getOrElse {
         BadRequest("Nope!")
       }
-      Documents.insertWithVersion(new NewDocument(name,categoryId), new NewVersion(null, "1.0", file))
+      Documents.insertWithVersion(new NewDocument(name, categoryId), new NewVersion(null, "1.0", file))
       Redirect(routes.CategoryController.category(categoryId))
     }
   }
