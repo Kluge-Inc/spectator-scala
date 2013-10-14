@@ -15,6 +15,7 @@ GET         /document/:id/upload          controllers.VersionController.showUpda
 POST        /document/:id/upload          controllers.VersionController.update(id: Long)
 
 GET         /version/:id/download         controllers.VersionController.download(id: Long)
+GET /version/diff/:id1/:id2                 controllers.VersionController.diff(id1: Long, id2: Long)
 
 POST        /:id/upload                   controllers.DocumentsController.uploadToCategory(id: Long)
 GET         /:id/upload                   controllers.DocumentsController.showUploadToCategory(id: Long)

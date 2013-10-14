@@ -46,5 +46,7 @@ object Versions extends Table[Version]("VERSION") {
     query.firstOption.get
   }
 
+  def findById(id: Long)(implicit s:Session) = byId(id).firstOption
+
   def getByDocument(id: Long)(implicit s:Session) = byDocument(id).list()
 }

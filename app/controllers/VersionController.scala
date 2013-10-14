@@ -7,6 +7,11 @@ import play.api.Play.current
 import com.google.common.io.Files
 import java.sql.Date
 import play.api.libs.iteratee.Enumerator
+import difflib.DiffUtils
+import scala.io.Source
+import scala.collection.mutable.ListBuffer
+import scala.collection.JavaConversions._
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,5 +54,19 @@ object VersionController extends Controller {
         header = ResponseHeader(200, Map("Content-Disposition" -> ("attachment; filename=" + document._1.name + "-" + document._2.version + ".doc"))),
         body = Enumerator(document._2.file)
       )
+  }
+
+  def diff(id1: Long, id2: Long) = DBAction {
+    //FIXME: Returns shit
+    implicit rs => {
+      val firstVersion = Versions.findById(id1).get
+      val secondVersion = Versions.findById(id2).get
+
+      val firstLines = Source.fromBytes(firstVersion.file)(scala.io.Codec.UTF8).getLines().toList
+      val secondLines = Source.fromBytes(secondVersion.file)(scala.io.Codec.UTF8).getLines().toList
+
+      val diffs = DiffUtils.diff(ListBuffer( firstLines: _* ), ListBuffer( secondLines: _* ))
+      Ok(diffs.getDeltas.get(0).toString)
+    }
   }
 }
