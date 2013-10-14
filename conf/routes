@@ -9,12 +9,10 @@ GET         /category/add                 controllers.CategoryController.addForm
 GET         /category/:id                 controllers.CategoryController.category(id: Long)
 POST        /category                     controllers.CategoryController.insert
 
-
 GET         /document/:id                 controllers.DocumentsController.show(id: Long)
 GET         /document/:id/download        controllers.DocumentsController.download(id: Long)
-GET         /document/:id/upload          controllers.DocumentsController.showUpdate(id: Long)
-POST        /document/:id/upload          controllers.DocumentsController.update(id: Long)
-
+GET         /document/:id/upload          controllers.VersionController.showUpdate(id: Long)
+POST        /document/:id/upload          controllers.VersionController.update(id: Long)
 
 POST        /:id/upload                   controllers.DocumentsController.uploadToCategory(id: Long)
 GET         /:id/upload                   controllers.DocumentsController.showUploadToCategory(id: Long)

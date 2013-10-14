@@ -30,13 +30,6 @@ object DocumentsController extends Controller {
       Ok(views.html.addDocument(Categories.getForm(id), None))
   }
 
-  def showUpdate(id: Long) = DBAction {
-    implicit rs => {
-      val document = Documents.findById(id)
-      Ok(views.html.addVersion(Categories.getForm(document._1.categoryId), document))
-    }
-  }
-
 
   def show(id: Long) = DBAction {
     implicit rs => {
@@ -45,24 +38,6 @@ object DocumentsController extends Controller {
     }
   }
 
-  def update(documentId: Long) = DBAction(parse.multipartFormData) {
-    implicit request => {
-      val document = Documents.findById(documentId)
-      val version = request.body.asFormUrlEncoded("version").head
-      var file: Array[Byte] = Array.emptyByteArray
-      request.body.file("doc").map {
-        doc =>
-          file = Files.toByteArray(doc.ref.file)
-          doc.ref.file.delete()
-      }.getOrElse {
-        BadRequest("Nope!")
-      }
-
-      Documents.insertVersion(document._1, new NewVersion(new Date(1900, 5, 20), version, file))
-
-      Redirect(routes.DocumentsController.show(documentId))
-    }
-  }
 
   def uploadToCategory(categoryId: Long) = DBAction(parse.multipartFormData) {
     implicit request => {
