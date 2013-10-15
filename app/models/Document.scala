@@ -59,6 +59,6 @@ object Documents extends Table[Document]("DOCUMENT") {
     val documentId = Query(Documents.map(_.id).max).first().getOrElse(0L) + 1L
     val versionId = Query(Versions.map(_.id).max).first().getOrElse(0L) + 1L
     Documents.insert(new Document(documentId, document.name, document.categoryId, versionId))
-    Versions.insert(new Version(versionId, documentId, new Date(1900, 05, 22), "1.0", version.file))
+    Versions.insert(new Version(versionId, documentId, new Date(1900, 05, 22), version.version, version.file))
   }
 }

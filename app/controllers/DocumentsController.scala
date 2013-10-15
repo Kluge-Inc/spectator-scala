@@ -5,6 +5,7 @@ import play.api.db.slick._
 import play.api.mvc.{Session => _,_}
 import play.api.Play.current
 import com.google.common.io.Files
+import java.sql.Date
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,10 +29,10 @@ object DocumentsController extends Controller {
     }
   }
 
-
   def uploadToCategory(categoryId: Long) = DBAction(parse.multipartFormData) {
     implicit request => {
       val name = request.body.asFormUrlEncoded("name").head
+      val version = request.body.asFormUrlEncoded("version").head
       var file: Array[Byte] = Array.emptyByteArray
       request.body.file("doc").map {
         doc =>
@@ -40,7 +41,7 @@ object DocumentsController extends Controller {
       }.getOrElse {
         BadRequest("Nope!")
       }
-      Documents.insertWithVersion(new NewDocument(name, categoryId), new NewVersion(null, "1.0", file))
+      Documents.insertWithVersion(new NewDocument(name, categoryId), new NewVersion(null, version, file))
       Redirect(routes.CategoryController.category(categoryId))
     }
   }
